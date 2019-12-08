@@ -3,12 +3,11 @@
 namespace App\Shop\Product\Database;
 
 use Astrotomic\Translatable\Translatable;
-use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    use Sluggable, Translatable;
+    use Translatable;
 
     /**
      * The attributes that should be translatable
@@ -18,16 +17,10 @@ class Product extends Model
     public $translatedAttributes = ['description', 'name', 'slug'];
 
     /**
-     * Return the sluggable configuration array for this model.
-     *
-     * @return array
+     * @internal will change to protected
      */
-    public function sluggable()
+    public function getTranslationModelName(): string
     {
-        return [
-            'slug' => [
-                'source' => 'name'
-            ]
-        ];
+        return ProductTranslation::class;
     }
 }

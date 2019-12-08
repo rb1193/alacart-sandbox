@@ -1,0 +1,1 @@
+<p>{{ __('products.none') }}</p>

@@ -8,13 +8,13 @@ use Illuminate\Support\Facades\Route;
 class RouteServiceProvider extends ServiceProvider
 {
     /**
-     * This namespace is applied to your controller routes.
+     * This namespace is applied to your shopfront controller routes.
      *
      * In addition, it is set as the URL generator's root namespace.
      *
      * @var string
      */
-    protected $namespace = 'App\Http\Controllers';
+    protected $shopfrontNamespace = 'App\Http\Shopfront';
 
     /**
      * Define your route model bindings, pattern filters, etc.
@@ -35,25 +35,25 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map()
     {
-        $this->mapApiRoutes();
+        //$this->mapApiRoutes();
 
-        $this->mapWebRoutes();
+        $this->mapShopfrontRoutes();
 
         //
     }
 
     /**
-     * Define the "web" routes for the application.
+     * Define the "shopfront" routes for the application.
      *
      * These routes all receive session state, CSRF protection, etc.
      *
      * @return void
      */
-    protected function mapWebRoutes()
+    protected function mapShopfrontRoutes()
     {
         Route::middleware('web')
-             ->namespace($this->namespace)
-             ->group(base_path('routes/web.php'));
+             ->namespace($this->shopfrontNamespace)
+             ->group(base_path('routes/shopfront.php'));
     }
 
     /**
