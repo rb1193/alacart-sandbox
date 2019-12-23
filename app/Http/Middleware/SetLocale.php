@@ -2,8 +2,10 @@
 
 namespace App\Http\Middleware;
 
+use App\Shop\Product\Database\Product;
 use Astrotomic\Translatable\Locales;
 use Closure;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
@@ -52,5 +54,21 @@ class SetLocale
         }
 
         App::setLocale($locale);
+
+        $this->addGlobalScopeToModels($locale);
+    }
+
+    /**
+     * Add the global locale scope to relevant models
+     *
+     * @param string $locale
+     */
+    protected function addGlobalScopeToModels(string $locale)
+    {
+        $scope = function (Builder $query) use ($locale) {
+            $query->translatedIn($locale);
+        };
+
+        Product::addGlobalScope($scope);
     }
 }

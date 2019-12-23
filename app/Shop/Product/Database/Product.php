@@ -6,10 +6,18 @@ use Astrotomic\Translatable\Locales;
 use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Route;
 
 class Product extends Model
 {
     use Translatable;
+
+    /**
+     * The attributes that should be mass-assignable
+     *
+     * @var array
+     */
+    protected $fillable = ['sku', 'name', 'description'];
 
     /**
      * The attributes that should be translatable
@@ -19,27 +27,15 @@ class Product extends Model
     public $translatedAttributes = ['description', 'name', 'slug'];
 
     /**
-     * The "booting" method of the model.
-     *
-     * @return void
-     */
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::addGlobalScope(function (Builder $query) {
-            $query->translatedIn(app(Locales::class)->current());
-        });
-    }
-
-    /**
      * Get the route key for the model.
      *
      * @return string
      */
     public function getRouteKeyName()
     {
-        return 'slug';
+        $prefix = Route::current()->getPrefix();
+
+        return $prefix === 'api' ? 'sku' : 'slug';
     }
 
     /**

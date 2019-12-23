@@ -8,6 +8,15 @@ use Illuminate\Support\Facades\Route;
 class RouteServiceProvider extends ServiceProvider
 {
     /**
+     * This namespace is applied to your REST api controller routes.
+     *
+     * In addition, it is set as the URL generator's root namespace.
+     *
+     * @var string
+     */
+    protected $restNamespace = 'App\Http\Api';
+
+    /**
      * This namespace is applied to your shopfront controller routes.
      *
      * In addition, it is set as the URL generator's root namespace.
@@ -16,6 +25,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected $shopfrontNamespace = 'App\Http\Shopfront';
 
+
     /**
      * Define your route model bindings, pattern filters, etc.
      *
@@ -23,8 +33,6 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
-
         parent::boot();
     }
 
@@ -35,11 +43,9 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map()
     {
-        //$this->mapApiRoutes();
+        $this->mapApiRoutes();
 
         $this->mapShopfrontRoutes();
-
-        //
     }
 
     /**
@@ -67,7 +73,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::prefix('api')
              ->middleware('api')
-             ->namespace($this->namespace)
+             ->namespace($this->restNamespace)
              ->group(base_path('routes/api.php'));
     }
 }
