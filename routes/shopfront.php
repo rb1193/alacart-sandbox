@@ -16,6 +16,6 @@ Route::get('/', function () {
 });
 
 Route::group(['namespace' => 'Products', 'prefix' => 'products'], function () {
-    Route::get('/', 'ProductsController@index');
-    Route::get('/{product}', 'ProductsController@show');
+    Route::get('/', 'ProductsController@index')->name('products.index');
+    Route::get('/{product}', 'ProductsController@show')->name('products.show');
 });
