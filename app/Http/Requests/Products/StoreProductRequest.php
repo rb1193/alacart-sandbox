@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Products;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -24,6 +24,8 @@ class StoreProductRequest extends FormRequest
     public function rules()
     {
         return [
+            'description' => ['required', 'string'],
+            'name' => ['required', 'string', 'max:255'],
             'sku' => ['required', 'string', 'unique:products,sku'],
         ];
     }

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Products;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ProductResource extends JsonResource
+class ProductTranslationResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,9 +15,10 @@ class ProductResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'sku' => $this->sku,
-            'name' => $this->name,
             'description' => $this->description,
+            'name' => $this->name,
+            'locale' => $this->locale,
+            'slug' => $this->slug,
         ];
     }
 }

@@ -6,6 +6,8 @@ use Astrotomic\Translatable\Locales;
 use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 
 class Product extends Model
@@ -39,14 +41,28 @@ class Product extends Model
     }
 
     /**
-     * Retrieve the model for a bound value.
+     * Retrieve the model for a product slug value.
      *
-     * @param  mixed  $value
-     * @return \Illuminate\Database\Eloquent\Model|null
+     * @param mixed $value
+     *
+     * @return self
      */
-    public function resolveRouteBinding($value)
+    public static function resolveSlugRouteBinding($value): self
     {
-        return $this->whereTranslation('slug', $value, $this->getLocalesHelper()->current())->firstOrFail();
+        $locale = App::make(Locales::class)->current();
+        return self::whereTranslation('slug', $value, $locale)->firstOrFail();
+    }
+
+    /**
+     * Resolve the model binding
+     *
+     * @param mixed $value
+     *
+     * @return self
+     */
+    public static function resolveSkuRouteBinding($value): self
+    {
+        return self::where('sku', $value)->firstOrFail();
     }
 
     /**
@@ -55,5 +71,42 @@ class Product extends Model
     public function getTranslationModelName(): string
     {
         return ProductTranslation::class;
+    }
+
+    /**
+     * Get a translation or fail
+     *
+     * @param string $locale
+     *
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     *
+     * @return \App\Shop\Product\Database\ProductTranslation
+     */
+    public function translateOrFail(string $locale): ProductTranslation
+    {
+        $translation = $this->getTranslation($locale);
+
+        if (is_null($translation)) {
+            throw new ModelNotFoundException();
+        }
+
+        return $translation;
+    }
+
+    /**
+     * Update an existing translation or create a new one
+     *
+     * @param string $locale
+     * @param array $attributes
+     *
+     * @return \App\Shop\Product\Database\ProductTranslation
+     */
+    public function translateOrCreate(string $locale, array $attributes): ProductTranslation
+    {
+        $translation = $this->translateOrNew($locale);
+        $translation->product_id = $this->id;
+        $translation->fill($attributes)->save();
+
+        return $translation;
     }
 }

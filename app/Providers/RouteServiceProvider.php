@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -34,6 +36,20 @@ class RouteServiceProvider extends ServiceProvider
     public function boot()
     {
         parent::boot();
+
+        Route::bind('locale', function ($value) {
+            if (!in_array($value, Config::get('translatable.locales'))) {
+                throw new NotFoundHttpException();
+            }
+
+            return $value;
+        });
+        Route::bind('product', function ($value) {
+            return \App\Shop\Product\Database\Product::resolveSlugRouteBinding($value);
+        });
+        Route::bind('product_sku', function ($value) {
+            return \App\Shop\Product\Database\Product::resolveSkuRouteBinding($value);
+        });
     }
 
     /**
